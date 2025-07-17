@@ -166,7 +166,7 @@ void GameWindow::playNextSong()
     player->stop();
     player->setSource(QUrl::fromLocalFile(musicFiles[currentSongIndex]));
     player->play();
-
+    ui->answerLineEdit->setFocus();
     // 根据难度设置定时停止
     // 难度为 0 代表整首歌，不需要定时器
     if (gameDifficulty > 0) {
@@ -196,6 +196,7 @@ void GameWindow::on_answerLineEdit_returnPressed()
 
 void GameWindow::on_submitAnswerButton_clicked()
 {
+    ui->answerLineEdit->setFocus();
     QString userAnswer = ui->answerLineEdit->text().trimmed();
     if (userAnswer.isEmpty()) {
         ui->statusLabel->setText("请输入答案！");

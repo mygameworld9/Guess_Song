@@ -84,10 +84,10 @@ void MainWindow::on_startButton_clicked()
     musicDir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
 
     // 检查过滤后的文件列表是否为空
-    if (musicDir.entryList().isEmpty()) {
-        QMessageBox::warning(this, "目录无效", "您选择的文件夹中没有找到任何支持的音乐文件！");
-        return; // 文件夹是空的，中断操作，不进入游戏窗口
-    }
+    // if (musicDir.entryList().isEmpty()) {
+    //     QMessageBox::warning(this, "目录无效", "您选择的文件夹中没有找到任何支持的音乐文件！");
+    //     return; // 文件夹是空的，中断操作，不进入游戏窗口
+    // }
     // 2. 获取游戏难度
     int difficulty = 1; // 默认1秒
     if (ui->threeSecondsRadioButton->isChecked()) {
