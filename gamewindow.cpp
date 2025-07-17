@@ -215,6 +215,7 @@ void GameWindow::on_submitAnswerButton_clicked()
         // 延迟1.5秒后自动播放下一首
         updateScore(5); // <-- 答对，+5分
         setInputControlsEnabled(false);
+        player->stop();
         QTimer::singleShot(1500, this, &GameWindow::playNextSong);
     } else {
         ui->statusLabel->setText("错误! ❌ 仅此而已了吗" );
@@ -230,6 +231,7 @@ void GameWindow::on_giveUpButton_clicked()
     countdownTimer->stop();
     ui->statusLabel->setText("正确答案是：" + currentCorrectAnswer + "自动切换下一首..");
     // displayCorrectAnswer(currentCorrectAnswer); // 显示正确答案
+    player->stop();
     setInputControlsEnabled(false);
     QTimer::singleShot(3000, this, &GameWindow::playNextSong); // 3秒后切歌
 }

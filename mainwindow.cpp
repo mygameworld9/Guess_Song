@@ -89,7 +89,7 @@ void MainWindow::on_startButton_clicked()
     //     return; // 文件夹是空的，中断操作，不进入游戏窗口
     // }
     // 2. 获取游戏难度
-    int difficulty = 1; // 默认1秒
+    float difficulty = 1.9; // 默认1秒
     if (ui->threeSecondsRadioButton->isChecked()) {
         difficulty = 3;
     } else if (ui->fiveSecondsRadioButton->isChecked()) {

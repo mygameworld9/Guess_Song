@@ -49,7 +49,7 @@ void generateShuffledPlaylist();
     Ui::gamewindow *ui;
     QString currentPlayingFile;
     QString musicDirectory;
-    int gameDifficulty;
+    float gameDifficulty;
     QTimer *countdownTimer;
     QElapsedTimer *elapsedTimer;
     const int countdownDuration = 20000;
