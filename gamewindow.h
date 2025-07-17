@@ -42,6 +42,7 @@ private:
     void loadMusicFiles();
     void setInputControlsEnabled(bool enabled);
     void playNextSong();
+    void updateScore(int points);
     void parseSongName(const QString& fileName, QString& artist, QString& title);
     void displayCorrectAnswer(const QString& answer);
 void generateShuffledPlaylist();
@@ -49,10 +50,11 @@ void generateShuffledPlaylist();
     QString currentPlayingFile;
     QString musicDirectory;
     int gameDifficulty;
-    QTimer *countdownTimer;       // <-- 新增：用于驱动进度条刷新的定时器
-    QElapsedTimer *elapsedTimer;    // <-- 新增：用于精确计时的定时器
-    const int countdownDuration = 20000; // <-- 新增：20秒，以毫秒为单位
+    QTimer *countdownTimer;
+    QElapsedTimer *elapsedTimer;
+    const int countdownDuration = 20000;
     QMediaPlayer *player;
+    int m_score;
     QAudioOutput *audioOutput;
     QList<int> shuffledPlaylist;
     int playlistPosition = 0;

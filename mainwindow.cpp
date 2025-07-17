@@ -70,7 +70,7 @@ void MainWindow::on_startButton_clicked()
     QString selectedMusicPath;
     if (ui->directoryModeComboBox->currentIndex() == 0) { // 指定文件夹
         if (ui->specificFolderComboBox->count() == 0 || ui->specificFolderComboBox->currentText().startsWith("Music目录下没有")) {
-            // QMessageBox::warning(this, "错误", "请选择一个有效的歌曲文件夹！");
+            QMessageBox::warning(this, "错误", "请选择一个有效的歌曲文件夹！");
             return; // 中断操作
         }
         selectedMusicPath = musicPath + "/" + ui->specificFolderComboBox->currentText();

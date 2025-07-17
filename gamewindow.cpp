@@ -34,6 +34,9 @@ GameWindow::GameWindow(QWidget *parent) :
     ui->countdownProgressBar->setVisible(false);
     ui->countdownProgressBar->setRange(0, 100);
     ui->countdownProgressBar->setValue(100); // 初始值设为满
+    m_score = 0;
+    ui->scoreLabel->setText(QString("分数: %1").arg(m_score));
+
 }
 GameWindow::~GameWindow()
 {
@@ -115,6 +118,16 @@ void GameWindow::on_playButton_clicked()
     } else {
         // 否则，播放一首新歌
         playNextSong();
+    }
+    if (gameDifficulty > 0) {
+        // 使用 QTimer::singleShot 可以创建一个只触发一次的定时器
+        // 它会在指定毫秒数后执行一个 lambda 函数
+        QTimer::singleShot(gameDifficulty * 1000, this, [this]() {
+            if (player->source() == QUrl::fromLocalFile(musicFiles[currentSongIndex])) {
+                player->stop();
+                qDebug() << "播放停止（" << gameDifficulty << "秒）。";
+            }
+        });
     }
 }
 void GameWindow::playNextSong()
@@ -199,10 +212,12 @@ void GameWindow::on_submitAnswerButton_clicked()
     if (userAnswer.toLower() == currentCorrectAnswer.toLower()) {
         ui->statusLabel->setText("正确! ✔️");
         // 延迟1.5秒后自动播放下一首
+        updateScore(5); // <-- 答对，+5分
         setInputControlsEnabled(false);
         QTimer::singleShot(1500, this, &GameWindow::playNextSong);
     } else {
         ui->statusLabel->setText("错误! ❌ 仅此而已了吗" );
+        updateScore(-1); // <-- 答错，-1分
         // 延迟3秒后自动播放下一首
         // QTimer::singleShot(3000, this, &GameWindow::playNextSong);
     }
@@ -210,6 +225,7 @@ void GameWindow::on_submitAnswerButton_clicked()
 void GameWindow::on_giveUpButton_clicked()
 {
     qDebug() << "点击了 '我没招儿了' 按钮。";
+    updateScore(-3);
     countdownTimer->stop();
     ui->statusLabel->setText("正确答案是：" + currentCorrectAnswer + "自动切换下一首..");
     // displayCorrectAnswer(currentCorrectAnswer); // 显示正确答案
@@ -298,7 +314,13 @@ void GameWindow::updateCountdown()
 void GameWindow::handleTimeUp()
 {
     ui->statusLabel->setText("时间到！答案是：" + currentCorrectAnswer);
+    updateScore(-5);
     player->stop(); // 时间到了也停止播放音乐
     setInputControlsEnabled(false); // 禁用输入
     QTimer::singleShot(3000, this, &GameWindow::playNextSong); // 3秒后切换到下一首
+}
+void GameWindow::updateScore(int points)
+{
+    m_score += points;
+    ui->scoreLabel->setText(QString("分数: %1").arg(m_score));
 }

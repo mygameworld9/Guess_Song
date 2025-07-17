@@ -34,6 +34,7 @@ public:
     QPushButton *giveUpButton;
     QLabel *correctAnswerLabel;
     QProgressBar *countdownProgressBar;
+    QLabel *scoreLabel;
 
     void setupUi(QWidget *gamewindow)
     {
@@ -77,8 +78,11 @@ public:
         correctAnswerLabel->setGeometry(QRect(230, 120, 53, 15));
         countdownProgressBar = new QProgressBar(gamewindow);
         countdownProgressBar->setObjectName("countdownProgressBar");
-        countdownProgressBar->setGeometry(QRect(90, 180, 118, 23));
+        countdownProgressBar->setGeometry(QRect(90, 180, 291, 23));
         countdownProgressBar->setValue(24);
+        scoreLabel = new QLabel(gamewindow);
+        scoreLabel->setObjectName("scoreLabel");
+        scoreLabel->setGeometry(QRect(290, 10, 53, 15));
 
         retranslateUi(gamewindow);
 
@@ -99,6 +103,7 @@ public:
         submitAnswerButton->setText(QCoreApplication::translate("gamewindow", "\346\217\220\344\272\244\347\255\224\346\241\210", nullptr));
         giveUpButton->setText(QCoreApplication::translate("gamewindow", "\346\210\221\346\262\241\346\213\233\345\204\277\344\272\206", nullptr));
         correctAnswerLabel->setText(QString());
+        scoreLabel->setText(QCoreApplication::translate("gamewindow", "\345\275\223\345\211\215\346\210\220\347\273\251\357\274\232", nullptr));
     } // retranslateUi
 
 };
