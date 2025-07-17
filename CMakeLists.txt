@@ -74,7 +74,7 @@ install(TARGETS guess
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
+add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(guess)
 endif()
@@ -86,3 +86,5 @@ add_custom_command(
     COMMENT "Copying Music folder to build directory..."
 )
 target_link_libraries(guess PRIVATE Qt6::Widgets Qt6::Multimedia)
+add_definitions(-DQT_USE_UTF8_CONVERSION)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexec-charset=UTF-8")

@@ -8,7 +8,7 @@
 #include <QStringList>
 #include <QMediaPlayer>
 #include <QAudioOutput> // <--- 新增：包含 QAudioOutput 的头文件
-
+#include <QList>
 #include "trie.h"
 #include <QCompleter>
 #include <QStringListModel>
@@ -40,15 +40,16 @@ private:
     void playNextSong();
     void parseSongName(const QString& fileName, QString& artist, QString& title);
     void displayCorrectAnswer(const QString& answer);
-
+void generateShuffledPlaylist();
     Ui::gamewindow *ui;
-
+    QString currentPlayingFile;
     QString musicDirectory;
     int gameDifficulty;
 
-    QMediaPlayer *player;           // 原有的播放器指针
-    QAudioOutput *audioOutput;      // <--- 新增：音频输出设备指针
-
+    QMediaPlayer *player;
+    QAudioOutput *audioOutput;
+    QList<int> shuffledPlaylist;
+    int playlistPosition = 0;
     QStringList musicFiles;
     QStringList songTitles;
     QString currentCorrectAnswer;

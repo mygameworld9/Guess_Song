@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QStringListModel>
 #include "gamewindow.h"
+#include <algorithm>
 GameWindow::GameWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::gamewindow)
@@ -75,11 +76,13 @@ void GameWindow::loadMusicFiles()
     }
     completerModel->setStringList(songTitles);
     // if (musicFiles.isEmpty()) {
-        // QMessageBox::warning(this, "错误", "所选目录中未找到任何支持的音乐文件！\n请检查目录或更换目录。");
-        // ui->playButton->setEnabled(false); // 禁用播放按钮
+    // QMessageBox::warning(this, "错误", "所选目录中未找到任何支持的音乐文件！\n请检查目录或更换目录。");
+    // ui->playButton->setEnabled(false); // 禁用播放按钮
     // } else {
-        qDebug() << "成功加载" << musicFiles.count() << "首歌曲。";
+    qDebug() << "成功加载" << musicFiles.count() << "首歌曲。";
     // }
+    generateShuffledPlaylist(); //开始生成播放列表
+
 }
 void GameWindow::parseSongName(const QString& fileName, QString& artist, QString& title)
 {
@@ -109,15 +112,19 @@ void GameWindow::on_playButton_clicked()
 void GameWindow::playNextSong()
 {
     if (musicFiles.isEmpty()) return;
-
+    if (playlistPosition >= shuffledPlaylist.size()) {
+        QMessageBox::information(this, "提示", "所有歌曲均已播放完毕！\n即将开始新一轮随机播放。");
+        // 重新生成一个新的、完全不同的随机播放列表
+        generateShuffledPlaylist();
+    }
     // 随机选择一首歌
-    currentSongIndex = QRandomGenerator::global()->bounded(musicFiles.count());
+    currentSongIndex = shuffledPlaylist[playlistPosition];
     currentCorrectAnswer = songTitles[currentSongIndex];
-    QFileInfo fileInfo(musicFiles[currentSongIndex]);
-    QString fileName = fileInfo.baseName();
-    QString artist, title;
-    parseSongName(fileName, artist, title);
-    currentCorrectAnswer = title; // 直接存储原始大小写的正确歌名
+    // QFileInfo fileInfo(musicFiles[currentSongIndex]);
+    // QString fileName = fileInfo.baseName();
+    // QString artist, title;
+    // parseSongName(fileName, artist, title);
+    // currentCorrectAnswer = title; // 直接存储原始大小写的正确歌名
 
     // 清空上一轮的答案并重置状态
     ui->answerLineEdit->clear();
@@ -141,6 +148,7 @@ void GameWindow::playNextSong()
             }
         });
     }
+    playlistPosition++;
 }
 void GameWindow::on_answerLineEdit_textChanged(const QString &text)
 {
@@ -232,4 +240,27 @@ void GameWindow::showEvent(QShowEvent *event)
 
         QTimer::singleShot(0, this, &GameWindow::playNextSong);
     }
+}
+void GameWindow::generateShuffledPlaylist()
+{
+    qDebug() << "生成新的随机播放列表...";
+
+    // 1. 清空旧的播放列表
+    shuffledPlaylist.clear();
+
+    // 2. 创建一个临时的、从 0 到 n-1 的顺序索引列表
+    for (int i = 0; i < musicFiles.size(); ++i) {
+        shuffledPlaylist.append(i);
+        qDebug() << i << " ";
+    }
+
+    // 3. 使用C++标准库的算法来彻底打乱这个索引列表
+    // std::random_shuffle(shuffledPlaylist.begin(), shuffledPlaylist.end());//c17被弃用
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(shuffledPlaylist.begin(), shuffledPlaylist.end(), g);
+    // 4. 将播放位置重置为0，从新列表的开头开始
+    playlistPosition = 0;
+
+    qDebug() << "新列表已生成，包含" << shuffledPlaylist.size() << "首歌曲。";
 }
