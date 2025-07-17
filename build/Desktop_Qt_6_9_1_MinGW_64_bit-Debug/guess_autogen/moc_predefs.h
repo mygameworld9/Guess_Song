@@ -155,6 +155,7 @@
 #define __INT_FAST16_TYPE__ short int
 #define __MMX_WITH_SSE__ 1
 #define _fastcall __attribute__((__fastcall__))
+#define QT_USE_UTF8_CONVERSION 1
 #define __LDBL_HAS_DENORM__ 1
 #define QT_WIDGETS_LIB 1
 #define __SEG_GS 1

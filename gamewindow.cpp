@@ -159,22 +159,7 @@ void GameWindow::on_answerLineEdit_textChanged(const QString &text)
 }
 void GameWindow::on_answerLineEdit_returnPressed()
 {
-    if (currentSongIndex == -1) return;
-
-    QString userAnswer = ui->answerLineEdit->text().trimmed();
-    player->stop();
-    // 判断答案，统一转为小写进行比较，实现不区分大小写
-    if (userAnswer.toLower() == currentCorrectAnswer.toLower()) {
-        ui->statusLabel->setText("正确! 正在自动切换下一首...️");
-        // 延迟1.5秒后自动播放下一首
-        QTimer::singleShot(1500, this, &GameWindow::playNextSong);
-    } else {
-        ui->statusLabel->setText("错误! ❌ 正确答案是: " + currentCorrectAnswer);
-        // 延迟3秒后自动播放下一首
-        QTimer::singleShot(3000, this, &GameWindow::playNextSong);
-    }
-
-    currentSongIndex = -1; // 防止在进入下一首之前重复判断
+    on_submitAnswerButton_clicked();
 }
 // 在 gamewindow.cpp 中
 
@@ -191,10 +176,7 @@ void GameWindow::on_submitAnswerButton_clicked()
         });
         return;
     }
-
-    player->stop();
-
-
+    // player->stop();
     // 判断答案（统一转为小写进行比较）
     if (userAnswer.toLower() == currentCorrectAnswer.toLower()) {
         ui->statusLabel->setText("正确! ✔️");
@@ -205,7 +187,6 @@ void GameWindow::on_submitAnswerButton_clicked()
         // 延迟3秒后自动播放下一首
         // QTimer::singleShot(3000, this, &GameWindow::playNextSong);
     }
-
 }
 void GameWindow::on_giveUpButton_clicked()
 {

@@ -30,6 +30,8 @@ public:
     QPushButton *changeFolderButton;
     QPushButton *changeDifficultyButton;
     QPushButton *submitAnswerButton;
+    QPushButton *giveUpButton;
+    QLabel *correctAnswerLabel;
 
     void setupUi(QWidget *gamewindow)
     {
@@ -38,14 +40,14 @@ public:
         gamewindow->resize(400, 300);
         statusLabel = new QLabel(gamewindow);
         statusLabel->setObjectName("statusLabel");
-        statusLabel->setGeometry(QRect(110, 120, 111, 16));
+        statusLabel->setGeometry(QRect(70, 120, 261, 16));
         playButton = new QPushButton(gamewindow);
         playButton->setObjectName("playButton");
         playButton->setGeometry(QRect(110, 70, 101, 23));
         playButton->setIconSize(QSize(48, 48));
         answerLineEdit = new QLineEdit(gamewindow);
         answerLineEdit->setObjectName("answerLineEdit");
-        answerLineEdit->setGeometry(QRect(120, 160, 113, 21));
+        answerLineEdit->setGeometry(QRect(90, 160, 113, 21));
         horizontalLayoutWidget = new QWidget(gamewindow);
         horizontalLayoutWidget->setObjectName("horizontalLayoutWidget");
         horizontalLayoutWidget->setGeometry(QRect(90, 210, 160, 80));
@@ -64,9 +66,18 @@ public:
 
         submitAnswerButton = new QPushButton(gamewindow);
         submitAnswerButton->setObjectName("submitAnswerButton");
-        submitAnswerButton->setGeometry(QRect(250, 160, 75, 23));
+        submitAnswerButton->setGeometry(QRect(220, 160, 75, 23));
+        giveUpButton = new QPushButton(gamewindow);
+        giveUpButton->setObjectName("giveUpButton");
+        giveUpButton->setGeometry(QRect(310, 160, 75, 23));
+        correctAnswerLabel = new QLabel(gamewindow);
+        correctAnswerLabel->setObjectName("correctAnswerLabel");
+        correctAnswerLabel->setGeometry(QRect(230, 120, 53, 15));
 
         retranslateUi(gamewindow);
+
+        submitAnswerButton->setDefault(true);
+
 
         QMetaObject::connectSlotsByName(gamewindow);
     } // setupUi
@@ -80,6 +91,8 @@ public:
         changeFolderButton->setText(QCoreApplication::translate("gamewindow", "\346\233\264\346\224\271\347\233\256\345\275\225", nullptr));
         changeDifficultyButton->setText(QCoreApplication::translate("gamewindow", "\346\233\264\346\224\271\351\232\276\345\272\246", nullptr));
         submitAnswerButton->setText(QCoreApplication::translate("gamewindow", "\346\217\220\344\272\244\347\255\224\346\241\210", nullptr));
+        giveUpButton->setText(QCoreApplication::translate("gamewindow", "\346\210\221\346\262\241\346\213\233\345\204\277\344\272\206", nullptr));
+        correctAnswerLabel->setText(QString());
     } // retranslateUi
 
 };
