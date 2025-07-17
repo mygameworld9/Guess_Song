@@ -25,7 +25,8 @@ public:
     explicit GameWindow(QWidget *parent = nullptr);
     ~GameWindow();
     void setGameSettings(const QString &path, int difficulty);
-
+protected:
+    void showEvent(QShowEvent *event) override; // 覆盖 QWidget 的 showEvent
 private slots:
     void on_playButton_clicked();
     void on_answerLineEdit_textChanged(const QString &text);
@@ -33,10 +34,12 @@ private slots:
     void on_changeFolderButton_clicked();
     void on_changeDifficultyButton_clicked();
     void on_submitAnswerButton_clicked();
+    void on_giveUpButton_clicked();
 private:
     void loadMusicFiles();
     void playNextSong();
     void parseSongName(const QString& fileName, QString& artist, QString& title);
+    void displayCorrectAnswer(const QString& answer);
 
     Ui::gamewindow *ui;
 
@@ -50,7 +53,7 @@ private:
     QStringList songTitles;
     QString currentCorrectAnswer;
     int currentSongIndex = -1;
-
+    bool isFirstShow = true;
     Trie songTrie;
     QCompleter *completer;
     QStringListModel *completerModel;

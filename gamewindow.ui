@@ -16,9 +16,9 @@
   <widget class="QLabel" name="statusLabel">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>70</x>
      <y>120</y>
-     <width>111</width>
+     <width>261</width>
      <height>16</height>
     </rect>
    </property>
@@ -48,7 +48,7 @@
   <widget class="QLineEdit" name="answerLineEdit">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>90</x>
      <y>160</y>
      <width>113</width>
      <height>21</height>
@@ -87,7 +87,7 @@
   <widget class="QPushButton" name="submitAnswerButton">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>220</x>
      <y>160</y>
      <width>75</width>
      <height>23</height>
@@ -95,6 +95,32 @@
    </property>
    <property name="text">
     <string>提交答案</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="giveUpButton">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>160</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>我没招儿了</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="correctAnswerLabel">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>120</y>
+     <width>53</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

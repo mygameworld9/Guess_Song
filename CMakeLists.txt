@@ -45,6 +45,10 @@ else()
         add_executable(guess
             ${PROJECT_SOURCES}
         )
+    target_compile_options(my_awesome_game PRIVATE
+        -finput-charset=UTF-8
+        -fexec-charset=UTF-8
+    )
     endif()
 endif()
 

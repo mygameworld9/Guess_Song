@@ -26,9 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     // 3. 初始化时，根据 directoryModeComboBox 的默认选项，决定是否显示 specificFolderComboBox
     on_directoryModeComboBox_currentIndexChanged(ui->directoryModeComboBox->currentIndex());
 
-    // 4. 连接信号和槽 (Qt Designer中自动完成了，但也可以手动写)
-    // connect(ui->directoryModeComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::on_directoryModeComboBox_currentIndexChanged);
-    // connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::on_startButton_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -73,14 +70,24 @@ void MainWindow::on_startButton_clicked()
     QString selectedMusicPath;
     if (ui->directoryModeComboBox->currentIndex() == 0) { // 指定文件夹
         if (ui->specificFolderComboBox->count() == 0 || ui->specificFolderComboBox->currentText().startsWith("Music目录下没有")) {
-            QMessageBox::warning(this, "错误", "请选择一个有效的歌曲文件夹！");
+            // QMessageBox::warning(this, "错误", "请选择一个有效的歌曲文件夹！");
             return; // 中断操作
         }
         selectedMusicPath = musicPath + "/" + ui->specificFolderComboBox->currentText();
     } else { // 所有文件夹
         selectedMusicPath = musicPath;
     }
+    QDir musicDir(selectedMusicPath);
+    QStringList nameFilters;
+    nameFilters << "*.mp3" << "*.wav" << "*.flac";
+    musicDir.setNameFilters(nameFilters);
+    musicDir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
 
+    // 检查过滤后的文件列表是否为空
+    if (musicDir.entryList().isEmpty()) {
+        QMessageBox::warning(this, "目录无效", "您选择的文件夹中没有找到任何支持的音乐文件！");
+        return; // 文件夹是空的，中断操作，不进入游戏窗口
+    }
     // 2. 获取游戏难度
     int difficulty = 1; // 默认1秒
     if (ui->threeSecondsRadioButton->isChecked()) {
