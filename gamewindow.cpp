@@ -19,13 +19,21 @@ GameWindow::GameWindow(QWidget *parent) :
 
     player->setAudioOutput(audioOutput);
     // 初始化自动补全功能
+    countdownTimer = new QTimer(this);
+    elapsedTimer = new QElapsedTimer();
+    connect(countdownTimer, &QTimer::timeout, this, &GameWindow::updateCountdown);
+
     completer = new QCompleter(this);
     completerModel = new QStringListModel(this);
     completer->setModel(completerModel);
     completer->setCaseSensitivity(Qt::CaseInsensitive); // 设置不区分大小写
     completer->setFilterMode(Qt::MatchContains);
+
     connect(ui->giveUpButton, &QPushButton::clicked, this, &GameWindow::on_giveUpButton_clicked);
     ui->answerLineEdit->setCompleter(completer);       // 将补全应用到输入框
+    ui->countdownProgressBar->setVisible(false);
+    ui->countdownProgressBar->setRange(0, 100);
+    ui->countdownProgressBar->setValue(100); // 初始值设为满
 }
 GameWindow::~GameWindow()
 {
@@ -111,7 +119,9 @@ void GameWindow::on_playButton_clicked()
 }
 void GameWindow::playNextSong()
 {
+
     setInputControlsEnabled(true);
+    countdownTimer->stop(); // 先停止上一次的计时器
     if (musicFiles.isEmpty()) return;
     if (playlistPosition >= shuffledPlaylist.size()) {
         QMessageBox::information(this, "提示", "所有歌曲均已播放完毕！\n即将开始新一轮随机播放。");
@@ -130,7 +140,14 @@ void GameWindow::playNextSong()
     // 清空上一轮的答案并重置状态
     ui->answerLineEdit->clear();
     ui->statusLabel->setText("请听题...");
-
+    if (gameDifficulty > 0) { // 难度不为“整首歌”
+        ui->countdownProgressBar->setVisible(true); // 显示进度条
+        ui->countdownProgressBar->setValue(100);    // 重置为满格
+        elapsedTimer->start();                      // 开始计时
+        countdownTimer->start(100);                 // 每100毫秒刷新一次
+    } else {
+        ui->countdownProgressBar->setVisible(false); // “整首歌”难度则隐藏
+    }
     qDebug() << "当前播放: " << musicFiles[currentSongIndex];
     qDebug() << "正确答案是: " << currentCorrectAnswer;
     player->stop();
@@ -193,6 +210,7 @@ void GameWindow::on_submitAnswerButton_clicked()
 void GameWindow::on_giveUpButton_clicked()
 {
     qDebug() << "点击了 '我没招儿了' 按钮。";
+    countdownTimer->stop();
     ui->statusLabel->setText("正确答案是：" + currentCorrectAnswer + "自动切换下一首..");
     // displayCorrectAnswer(currentCorrectAnswer); // 显示正确答案
     setInputControlsEnabled(false);
@@ -254,4 +272,33 @@ void GameWindow::setInputControlsEnabled(bool enabled)//定时器禁用
     ui->submitAnswerButton->setEnabled(enabled);
     ui->giveUpButton->setEnabled(enabled);
     ui->playButton->setEnabled(enabled);
+}
+
+// gamewindow.cpp
+
+// 在文件的任何地方添加这两个新函数的实现
+
+void GameWindow::updateCountdown()
+{
+    qint64 elapsed = elapsedTimer->elapsed();
+    if (elapsed >= countdownDuration) {
+        // 时间到！
+        countdownTimer->stop();
+        handleTimeUp();
+        return;
+    }
+
+    int progress = 100 - (elapsed * 100 / countdownDuration);
+    ui->countdownProgressBar->setValue(progress);
+
+    int remainingSeconds = (countdownDuration - elapsed + 999) / 1000;
+    ui->countdownProgressBar->setFormat(QString("%1 秒").arg(remainingSeconds));
+}
+
+void GameWindow::handleTimeUp()
+{
+    ui->statusLabel->setText("时间到！答案是：" + currentCorrectAnswer);
+    player->stop(); // 时间到了也停止播放音乐
+    setInputControlsEnabled(false); // 禁用输入
+    QTimer::singleShot(3000, this, &GameWindow::playNextSong); // 3秒后切换到下一首
 }

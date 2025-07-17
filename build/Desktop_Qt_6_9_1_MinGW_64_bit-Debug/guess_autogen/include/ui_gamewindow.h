@@ -14,6 +14,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
@@ -32,6 +33,7 @@ public:
     QPushButton *submitAnswerButton;
     QPushButton *giveUpButton;
     QLabel *correctAnswerLabel;
+    QProgressBar *countdownProgressBar;
 
     void setupUi(QWidget *gamewindow)
     {
@@ -47,7 +49,7 @@ public:
         playButton->setIconSize(QSize(48, 48));
         answerLineEdit = new QLineEdit(gamewindow);
         answerLineEdit->setObjectName("answerLineEdit");
-        answerLineEdit->setGeometry(QRect(90, 160, 113, 21));
+        answerLineEdit->setGeometry(QRect(90, 150, 113, 21));
         horizontalLayoutWidget = new QWidget(gamewindow);
         horizontalLayoutWidget->setObjectName("horizontalLayoutWidget");
         horizontalLayoutWidget->setGeometry(QRect(90, 210, 160, 80));
@@ -66,13 +68,17 @@ public:
 
         submitAnswerButton = new QPushButton(gamewindow);
         submitAnswerButton->setObjectName("submitAnswerButton");
-        submitAnswerButton->setGeometry(QRect(220, 160, 75, 23));
+        submitAnswerButton->setGeometry(QRect(220, 150, 75, 23));
         giveUpButton = new QPushButton(gamewindow);
         giveUpButton->setObjectName("giveUpButton");
-        giveUpButton->setGeometry(QRect(310, 160, 75, 23));
+        giveUpButton->setGeometry(QRect(310, 150, 75, 23));
         correctAnswerLabel = new QLabel(gamewindow);
         correctAnswerLabel->setObjectName("correctAnswerLabel");
         correctAnswerLabel->setGeometry(QRect(230, 120, 53, 15));
+        countdownProgressBar = new QProgressBar(gamewindow);
+        countdownProgressBar->setObjectName("countdownProgressBar");
+        countdownProgressBar->setGeometry(QRect(90, 180, 118, 23));
+        countdownProgressBar->setValue(24);
 
         retranslateUi(gamewindow);
 

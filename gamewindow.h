@@ -12,7 +12,7 @@
 #include "trie.h"
 #include <QCompleter>
 #include <QStringListModel>
-
+#include <QElapsedTimer>
 namespace Ui {
 class gamewindow;
 }
@@ -35,7 +35,10 @@ private slots:
     void on_changeDifficultyButton_clicked();
     void on_submitAnswerButton_clicked();
     void on_giveUpButton_clicked();
+    void updateCountdown();
+    void handleTimeUp();
 private:
+
     void loadMusicFiles();
     void setInputControlsEnabled(bool enabled);
     void playNextSong();
@@ -46,7 +49,9 @@ void generateShuffledPlaylist();
     QString currentPlayingFile;
     QString musicDirectory;
     int gameDifficulty;
-
+    QTimer *countdownTimer;       // <-- 新增：用于驱动进度条刷新的定时器
+    QElapsedTimer *elapsedTimer;    // <-- 新增：用于精确计时的定时器
+    const int countdownDuration = 20000; // <-- 新增：20秒，以毫秒为单位
     QMediaPlayer *player;
     QAudioOutput *audioOutput;
     QList<int> shuffledPlaylist;
