@@ -30,3 +30,11 @@
 190	1974	7744459479333829	CMakeFiles/guess.dir/mainwindow.cpp.obj	f8e6f14e3c8fb1f1
 192	2227	7744459479363828	CMakeFiles/guess.dir/gamewindow.cpp.obj	8cb2c3b46dc6706a
 2227	2606	7744459499704041	guess.exe	84ee7107247051ac
+15	517	7744463231834589	guess_autogen/timestamp	c897f79bfa77544d
+15	517	7744463231834589	guess_autogen/mocs_compilation.cpp	c897f79bfa77544d
+15	517	7744463231834589	D:/qt/guess/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/guess_autogen/timestamp	c897f79bfa77544d
+15	517	7744463231834589	D:/qt/guess/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/guess_autogen/mocs_compilation.cpp	c897f79bfa77544d
+517	1978	7744463232424583	CMakeFiles/guess.dir/guess_autogen/mocs_compilation.cpp.obj	64798b75768e834c
+519	2149	7744463232454597	CMakeFiles/guess.dir/mainwindow.cpp.obj	f8e6f14e3c8fb1f1
+521	2328	7744463232474583	CMakeFiles/guess.dir/gamewindow.cpp.obj	8cb2c3b46dc6706a
+2328	2637	7744463250543143	guess.exe	84ee7107247051ac

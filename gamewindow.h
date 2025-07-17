@@ -37,6 +37,7 @@ private slots:
     void on_giveUpButton_clicked();
 private:
     void loadMusicFiles();
+    void setInputControlsEnabled(bool enabled);
     void playNextSong();
     void parseSongName(const QString& fileName, QString& artist, QString& title);
     void displayCorrectAnswer(const QString& answer);

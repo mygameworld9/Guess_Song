@@ -111,6 +111,7 @@ void GameWindow::on_playButton_clicked()
 }
 void GameWindow::playNextSong()
 {
+    setInputControlsEnabled(true);
     if (musicFiles.isEmpty()) return;
     if (playlistPosition >= shuffledPlaylist.size()) {
         QMessageBox::information(this, "提示", "所有歌曲均已播放完毕！\n即将开始新一轮随机播放。");
@@ -181,6 +182,7 @@ void GameWindow::on_submitAnswerButton_clicked()
     if (userAnswer.toLower() == currentCorrectAnswer.toLower()) {
         ui->statusLabel->setText("正确! ✔️");
         // 延迟1.5秒后自动播放下一首
+        setInputControlsEnabled(false);
         QTimer::singleShot(1500, this, &GameWindow::playNextSong);
     } else {
         ui->statusLabel->setText("错误! ❌ 仅此而已了吗" );
@@ -193,6 +195,7 @@ void GameWindow::on_giveUpButton_clicked()
     qDebug() << "点击了 '我没招儿了' 按钮。";
     ui->statusLabel->setText("正确答案是：" + currentCorrectAnswer + "自动切换下一首..");
     // displayCorrectAnswer(currentCorrectAnswer); // 显示正确答案
+    setInputControlsEnabled(false);
     QTimer::singleShot(3000, this, &GameWindow::playNextSong); // 3秒后切歌
 }
 void GameWindow::displayCorrectAnswer(const QString& answer)
@@ -244,4 +247,11 @@ void GameWindow::generateShuffledPlaylist()
     playlistPosition = 0;
 
     qDebug() << "新列表已生成，包含" << shuffledPlaylist.size() << "首歌曲。";
+}
+void GameWindow::setInputControlsEnabled(bool enabled)//定时器禁用
+{
+    ui->answerLineEdit->setEnabled(enabled);
+    ui->submitAnswerButton->setEnabled(enabled);
+    ui->giveUpButton->setEnabled(enabled);
+    ui->playButton->setEnabled(enabled);
 }

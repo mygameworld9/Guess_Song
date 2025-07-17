@@ -815,7 +815,7 @@ D:/qt/guess/mainwindow.h
 D:/qt/guess/trie.h
 D:/qt/guess/gamewindow.cpp
  uic:ui_gamewindow.h
+D:/qt/guess/main.cpp
 D:/qt/guess/mainwindow.cpp
  uic:ui_mainwindow.h
-D:/qt/guess/main.cpp
 D:/qt/guess/trie.cpp
