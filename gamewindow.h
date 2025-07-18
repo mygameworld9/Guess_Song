@@ -37,6 +37,7 @@ private slots:
     void on_giveUpButton_clicked();
     void updateCountdown();
     void handleTimeUp();
+    void onDurationChanged(qint64 duration);
 private:
 
     void loadMusicFiles();
@@ -45,6 +46,7 @@ private:
     void updateScore(int points);
     void parseSongName(const QString& fileName, QString& artist, QString& title);
     void displayCorrectAnswer(const QString& answer);
+
 void generateShuffledPlaylist();
     Ui::gamewindow *ui;
     QString currentPlayingFile;
@@ -66,6 +68,8 @@ void generateShuffledPlaylist();
     Trie songTrie;
     QCompleter *completer;
     QStringListModel *completerModel;
+    qint64 m_currentSongDuration;
+    QString m_lastSubmittedAnswer;
 };
 
 #endif // GAMEWINDOW_H

@@ -13,6 +13,7 @@ GameWindow::GameWindow(QWidget *parent) :
     ui(new Ui::gamewindow)
 {
     ui->setupUi(this);
+    m_lastSubmittedAnswer = "";
     player = new QMediaPlayer(this);
 
     audioOutput = new QAudioOutput(this);
@@ -36,7 +37,7 @@ GameWindow::GameWindow(QWidget *parent) :
     ui->countdownProgressBar->setValue(100); // 初始值设为满
     m_score = 0;
     ui->scoreLabel->setText(QString("分数: %1").arg(m_score));
-
+    connect(player, &QMediaPlayer::durationChanged, this, &GameWindow::onDurationChanged);
 }
 GameWindow::~GameWindow()
 {
@@ -135,6 +136,7 @@ void GameWindow::playNextSong()
 
     setInputControlsEnabled(true);
     countdownTimer->stop(); // 先停止上一次的计时器
+    m_currentSongDuration = 0;
     if (musicFiles.isEmpty()) return;
     if (playlistPosition >= shuffledPlaylist.size()) {
         QMessageBox::information(this, "提示", "所有歌曲均已播放完毕！\n即将开始新一轮随机播放。");
@@ -166,6 +168,50 @@ void GameWindow::playNextSong()
     player->stop();
     player->setSource(QUrl::fromLocalFile(musicFiles[currentSongIndex]));
     player->play();
+    const int clipDurationMs = gameDifficulty * 1000;
+
+    // --- 核心改动：随机播放逻辑 ---
+    // 使用一个短暂延时来确保歌曲信息已加载
+    if (gameDifficulty == 0) {
+        // *** 整首歌播放模式 ***
+        qDebug() << "模式：整首歌播放";
+
+        // 隐藏倒计时进度条
+        ui->countdownProgressBar->setVisible(false);
+
+        // 直接从头开始播放，不需要任何定时停止
+        player->play();
+
+    }
+    else{
+        QTimer::singleShot(200, this, [this, clipDurationMs]() {
+            // 检查歌曲总时长是否已成功获取，并且长于我们要播放的片段
+            if (m_currentSongDuration > clipDurationMs) {
+                // 计算一个安全的随机起始点
+                // 最晚的起始点 = 总时长 - 片段时长
+                qint64 latestStartTime = m_currentSongDuration - clipDurationMs - 10;
+                // 生成一个从 0 到 latestStartTime 的随机数
+                qint64 randomStartTime = QRandomGenerator::global()->bounded(latestStartTime);
+
+                qDebug() << "跳转到随机位置:" << randomStartTime << "ms";
+                player->setPosition(randomStartTime + 10); // 跳转到该位置
+            }
+            // 如果歌曲本身很短或时长获取失败，就从头播放
+            else {
+                qDebug() << "歌曲太短或时长无效，从头播放。";
+                player->setPosition(0);
+            }
+
+            // 设置一个定时器，在播放了 clipDurationMs 毫秒后停止播放
+            QTimer::singleShot(clipDurationMs, this, [this]() {
+                // 再次检查，确保是在操作同一首歌时才停止
+                if(player->source() == QUrl::fromLocalFile(musicFiles[currentSongIndex])) {
+                    player->stop();
+                    qDebug() << "片段播放停止。";
+                }
+            });
+        });
+    }
     ui->answerLineEdit->setFocus();
     // 根据难度设置定时停止
     // 难度为 0 代表整首歌，不需要定时器
@@ -198,6 +244,7 @@ void GameWindow::on_submitAnswerButton_clicked()
 {
     ui->answerLineEdit->setFocus();
     QString userAnswer = ui->answerLineEdit->text().trimmed();
+    if(userAnswer == m_lastSubmittedAnswer) return;
     if (userAnswer.isEmpty()) {
         ui->statusLabel->setText("请输入答案！");
         // 使用QTimer短暂显示提示后恢复
@@ -213,8 +260,9 @@ void GameWindow::on_submitAnswerButton_clicked()
     if (userAnswer.toLower() == currentCorrectAnswer.toLower()) {
         ui->statusLabel->setText("正确! ✔️");
         // 延迟1.5秒后自动播放下一首
-        updateScore(5); // <-- 答对，+5分
-        setInputControlsEnabled(false);
+        int addScore = countdownDuration - elapsedTimer->elapsed();
+        updateScore(5 + addScore / 1000.0 / 5); // <-- 答对，+5分 2000 *0.05
+        /*setInputControlsEnabled*/(false);
         player->stop();
         QTimer::singleShot(1500, this, &GameWindow::playNextSong);
     } else {
@@ -223,6 +271,7 @@ void GameWindow::on_submitAnswerButton_clicked()
         // 延迟3秒后自动播放下一首
         // QTimer::singleShot(3000, this, &GameWindow::playNextSong);
     }
+    m_lastSubmittedAnswer = userAnswer;
 }
 void GameWindow::on_giveUpButton_clicked()
 {
@@ -264,6 +313,7 @@ void GameWindow::showEvent(QShowEvent *event)
 }
 void GameWindow::generateShuffledPlaylist()
 {
+    m_lastSubmittedAnswer = "";
     qDebug() << "生成新的随机播放列表...";
 
     // 1. 清空旧的播放列表
@@ -319,11 +369,16 @@ void GameWindow::handleTimeUp()
     ui->statusLabel->setText("时间到！答案是：" + currentCorrectAnswer);
     updateScore(-5);
     player->stop(); // 时间到了也停止播放音乐
-    setInputControlsEnabled(false); // 禁用输入
+    // setInputControlsEnabled(false); // 禁用输入
     QTimer::singleShot(3000, this, &GameWindow::playNextSong); // 3秒后切换到下一首
 }
 void GameWindow::updateScore(int points)
 {
     m_score += points;
     ui->scoreLabel->setText(QString("分数: %1").arg(m_score));
+}
+void GameWindow::onDurationChanged(qint64 duration)
+{
+    qDebug() << "歌曲总时长已获取:" << duration << "ms";
+    m_currentSongDuration = duration;
 }
