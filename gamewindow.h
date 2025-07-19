@@ -71,6 +71,7 @@ void generateShuffledPlaylist();
     QStringListModel *completerModel;
     qint64 m_currentSongDuration;
     QString m_lastSubmittedAnswer;
+    qint64 randomStartTime;
     // int State = 0;//初始是正在播放
 };
 

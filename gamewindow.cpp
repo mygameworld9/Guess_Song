@@ -115,21 +115,33 @@ void GameWindow::on_playButton_clicked()
     // 如果当前有歌曲正在播放（意味着用户想重复听），则重新播放
     if (player->playbackState() == QMediaPlayer::PlayingState || currentSongIndex != -1) {
         player->stop(); // 先停止
-        player->setPosition(0); // 将播放位置重置到开头
-        player->play(); // 播放
-    } else {
-        // 否则，播放一首新歌
-        playNextSong();
+        if(gameDifficulty > 0){
+            player->setSource(QUrl::fromLocalFile(musicFiles[currentSongIndex]));
+            player->setPosition(randomStartTime + 10);
+        }
+        else{
+            player->setPosition(0); // 将播放位置重置到开头
+        }
     }
+    player->play();
+
     if (gameDifficulty > 0) {
         // 使用 QTimer::singleShot 可以创建一个只触发一次的定时器
         // 它会在指定毫秒数后执行一个 lambda 函数
-        QTimer::singleShot(gameDifficulty * 1000, this, [this]() {
-            if (player->source() == QUrl::fromLocalFile(musicFiles[currentSongIndex])) {
+        QTimer::singleShot( gameDifficulty * 1000, this, [this]() {
+            // 再次检查，确保是在操作同一首歌时才停止
+            if(player->source() == QUrl::fromLocalFile(musicFiles[currentSongIndex])) {
                 player->stop();
-                qDebug() << "播放停止（" << gameDifficulty << "秒）。";
+                qDebug() << "片段播放停止。";
             }
         });
+    }
+    qint64 elapsed = elapsedTimer->elapsed();
+    if (elapsed >= countdownDuration) {
+        // 时间到！
+        countdownTimer->stop();
+        handleTimeUp();
+        return;
     }
 }
 void GameWindow::playNextSong()
@@ -192,7 +204,7 @@ void GameWindow::playNextSong()
                 // 最晚的起始点 = 总时长 - 片段时长
                 qint64 latestStartTime = m_currentSongDuration - clipDurationMs - 10;
                 // 生成一个从 0 到 latestStartTime 的随机数
-                qint64 randomStartTime = QRandomGenerator::global()->bounded(latestStartTime);
+                randomStartTime = QRandomGenerator::global()->bounded(latestStartTime);
 
                 qDebug() << "跳转到随机位置:" << randomStartTime << "ms";
                 player->setPosition(randomStartTime + 10); // 跳转到该位置
@@ -349,10 +361,6 @@ void GameWindow::setInputControlsEnabled(bool enabled)//定时器禁用
     ui->playButton->setEnabled(enabled);
 }
 
-// gamewindow.cpp
-
-// 在文件的任何地方添加这两个新函数的实现
-
 void GameWindow::updateCountdown()
 {
     qint64 elapsed = elapsedTimer->elapsed();
@@ -373,7 +381,7 @@ void GameWindow::updateCountdown()
 void GameWindow::handleTimeUp()
 {
     QString userAnswer = ui->answerLineEdit->text().trimmed();
-    if(userAnswer == m_lastSubmittedAnswer) return;
+    // if(userAnswer == m_lastSubmittedAnswer) return;
     if (userAnswer.toLower() == currentCorrectAnswer.toLower()) {
         ui->statusLabel->setText("正确! ✔️");
         // 延迟1.5秒后自动播放下一首
