@@ -38,6 +38,7 @@ GameWindow::GameWindow(QWidget *parent) :
     m_score = 0;
     ui->scoreLabel->setText(QString("分数: %1").arg(m_score));
     connect(player, &QMediaPlayer::durationChanged, this, &GameWindow::onDurationChanged);
+    connect(player, &QMediaPlayer::mediaStatusChanged, this, &GameWindow::onMediaStatusChanged);
 }
 GameWindow::~GameWindow()
 {
@@ -261,7 +262,12 @@ void GameWindow::on_submitAnswerButton_clicked()
         ui->statusLabel->setText("正确! ✔️");
         // 延迟1.5秒后自动播放下一首
         int addScore = countdownDuration - elapsedTimer->elapsed();
-        updateScore(5 + addScore / 1000.0 / 5); // <-- 答对，+5分 2000 *0.05
+        if(gameDifficulty){
+            updateScore(5 + addScore / 1000.0 / 5); // <-- 答对，+5分 2000 *0.05
+        }
+        else{
+            updateScore(5);
+        }
         /*setInputControlsEnabled*/(false);
         player->stop();
         QTimer::singleShot(1500, this, &GameWindow::playNextSong);
@@ -366,11 +372,24 @@ void GameWindow::updateCountdown()
 
 void GameWindow::handleTimeUp()
 {
-    ui->statusLabel->setText("时间到！答案是：" + currentCorrectAnswer);
-    updateScore(-5);
-    player->stop(); // 时间到了也停止播放音乐
-    // setInputControlsEnabled(false); // 禁用输入
-    QTimer::singleShot(3000, this, &GameWindow::playNextSong); // 3秒后切换到下一首
+    QString userAnswer = ui->answerLineEdit->text().trimmed();
+    if(userAnswer == m_lastSubmittedAnswer) return;
+    if (userAnswer.toLower() == currentCorrectAnswer.toLower()) {
+        ui->statusLabel->setText("正确! ✔️");
+        // 延迟1.5秒后自动播放下一首
+        // int addScore = countdownDuration - elapsedTimer->elapsed();
+        updateScore(5); // <-- 答对，+5分 2000 *0.05
+        /*setInputControlsEnabled*/(false);
+        player->stop();
+        QTimer::singleShot(1500, this, &GameWindow::playNextSong);
+    }
+    else{
+        ui->statusLabel->setText("时间到！答案是：" + currentCorrectAnswer);
+        updateScore(-5);
+        player->stop(); // 时间到了也停止播放音乐
+        // setInputControlsEnabled(false); // 禁用输入
+        QTimer::singleShot(3000, this, &GameWindow::playNextSong); // 3秒后切换到下一首
+    }
 }
 void GameWindow::updateScore(int points)
 {
@@ -381,4 +400,20 @@ void GameWindow::onDurationChanged(qint64 duration)
 {
     qDebug() << "歌曲总时长已获取:" << duration << "ms";
     m_currentSongDuration = duration;
+}
+
+
+void GameWindow::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
+{
+    // 检查状态是否为“媒体播放结束”
+    if (status == QMediaPlayer::EndOfMedia) {
+        qDebug() << "媒体播放结束 (EndOfMedia)。";
+
+        // 并且，仅在“整首歌”模式下才自动切换
+        if (gameDifficulty == 0) {
+            qDebug() << "模式为“整首歌”，将在1秒后自动切换到下一首。";
+
+            QTimer::singleShot(1000, this, &GameWindow::playNextSong);
+        }
+    }
 }

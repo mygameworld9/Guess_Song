@@ -46,6 +46,7 @@ private:
     void updateScore(int points);
     void parseSongName(const QString& fileName, QString& artist, QString& title);
     void displayCorrectAnswer(const QString& answer);
+    void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
 
 void generateShuffledPlaylist();
     Ui::gamewindow *ui;
@@ -70,6 +71,7 @@ void generateShuffledPlaylist();
     QStringListModel *completerModel;
     qint64 m_currentSongDuration;
     QString m_lastSubmittedAnswer;
+    // int State = 0;//初始是正在播放
 };
 
 #endif // GAMEWINDOW_H

@@ -49,7 +49,9 @@ template <> constexpr inline auto GameWindow::qt_create_metaobjectdata<qt_meta_t
         "on_submitAnswerButton_clicked",
         "on_giveUpButton_clicked",
         "updateCountdown",
-        "handleTimeUp"
+        "handleTimeUp",
+        "onDurationChanged",
+        "duration"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -73,6 +75,10 @@ template <> constexpr inline auto GameWindow::qt_create_metaobjectdata<qt_meta_t
         QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'handleTimeUp'
         QtMocHelpers::SlotData<void()>(11, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onDurationChanged'
+        QtMocHelpers::SlotData<void(qint64)>(12, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::LongLong, 13 },
+        }}),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -105,6 +111,7 @@ void GameWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 6: _t->on_giveUpButton_clicked(); break;
         case 7: _t->updateCountdown(); break;
         case 8: _t->handleTimeUp(); break;
+        case 9: _t->onDurationChanged((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
         default: ;
         }
     }
@@ -129,14 +136,14 @@ int GameWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 10)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 9;
+        _id -= 10;
     }
     return _id;
 }
