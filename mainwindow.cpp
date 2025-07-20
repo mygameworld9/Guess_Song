@@ -99,12 +99,15 @@ void MainWindow::on_startButton_clicked()
     }
 
     // 3. 隐藏主窗口，创建并显示游戏窗口
+
+
+    // GameWindow gameWindow(this); // 创建 GameWindow 实例
+    // gameWindow.exec(); // 以模态方式显示游戏窗口，代码会在此暂停直到窗口关闭
+    GameWindow *gameWindow = new GameWindow();
+    gameWindow -> setGameSettings(selectedMusicPath, difficulty); // 传递数据！
+    gameWindow -> setAttribute(Qt::WA_DeleteOnClose);
+    gameWindow -> show();
     this->hide();
-
-    GameWindow gameWindow(this); // 创建 GameWindow 实例
-    gameWindow.setGameSettings(selectedMusicPath, difficulty); // 传递数据！
-    gameWindow.exec(); // 以模态方式显示游戏窗口，代码会在此暂停直到窗口关闭
-
     // 4. 当游戏窗口关闭后，重新显示主窗口
-    this->show();
+    connect(gameWindow, &QObject::destroyed, this, &QWidget::show);
 }

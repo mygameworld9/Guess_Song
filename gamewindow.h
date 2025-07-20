@@ -3,7 +3,8 @@
 #ifndef GAMEWINDOW_H
 #define GAMEWINDOW_H
 
-#include <QDialog>
+// #include <QDialog>
+#include <QWidget>
 #include <QString>
 #include <QStringList>
 #include <QMediaPlayer>
@@ -17,7 +18,7 @@ namespace Ui {
 class gamewindow;
 }
 
-class GameWindow : public QDialog
+class GameWindow : public QWidget
 {
     Q_OBJECT
 
@@ -28,6 +29,7 @@ public:
 protected:
     void showEvent(QShowEvent *event) override; // 覆盖 QWidget 的 showEvent
 private slots:
+    void on_SkipButton_clicked();
     void on_playButton_clicked();
     void on_answerLineEdit_textChanged(const QString &text);
     void on_answerLineEdit_returnPressed();

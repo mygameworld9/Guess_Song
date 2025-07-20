@@ -8,8 +8,12 @@
 #include <QStringListModel>
 #include "gamewindow.h"
 #include <algorithm>
+#include <QKeySequence>
+#include <QShortcut>
 GameWindow::GameWindow(QWidget *parent) :
-    QDialog(parent),
+    // QDialog(parent),
+    QWidget(parent),
+
     ui(new Ui::gamewindow)
 {
     ui->setupUi(this);
@@ -17,7 +21,7 @@ GameWindow::GameWindow(QWidget *parent) :
     player = new QMediaPlayer(this);
 
     audioOutput = new QAudioOutput(this);
-
+    // QKeySequence keySequence(tr("Alt+Right"));
     player->setAudioOutput(audioOutput);
     // 初始化自动补全功能
     countdownTimer = new QTimer(this);
@@ -39,6 +43,16 @@ GameWindow::GameWindow(QWidget *parent) :
     ui->scoreLabel->setText(QString("分数: %1").arg(m_score));
     connect(player, &QMediaPlayer::durationChanged, this, &GameWindow::onDurationChanged);
     connect(player, &QMediaPlayer::mediaStatusChanged, this, &GameWindow::onMediaStatusChanged);
+    connect(ui->actionSkip, &QAction::triggered, ui->SkipButton, &QPushButton::click);
+
+
+    QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+D"), this);
+
+    // 设置为ApplicationShortcut，解决焦口问题
+    shortcut->setContext(Qt::ApplicationShortcut);
+
+    // 连接
+    QObject::connect(shortcut, &QShortcut::activated, ui -> SkipButton, &QPushButton::click);
 }
 GameWindow::~GameWindow()
 {
@@ -309,18 +323,18 @@ void GameWindow::displayCorrectAnswer(const QString& answer)
 void GameWindow::on_changeFolderButton_clicked()
 {
 
-    this->accept();
+    this->close();
 }
 
 void GameWindow::on_changeDifficultyButton_clicked()
 {
     // 关闭窗口。
-    this->accept();
+    this->close();
 }
 
 void GameWindow::showEvent(QShowEvent *event)
 {
-    QDialog::showEvent(event);
+    QWidget::showEvent(event);
 
     // 检查是否是第一次显示窗口，并且音乐文件已成功加载
     if (isFirstShow && !musicFiles.isEmpty()) {
@@ -419,9 +433,14 @@ void GameWindow::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 
         // 并且，仅在“整首歌”模式下才自动切换
         if (gameDifficulty == 0) {
+            // QString userAnswer = ui->answerLineEdit->text().trimmed();
             qDebug() << "模式为“整首歌”，将在1秒后自动切换到下一首。";
 
             QTimer::singleShot(1000, this, &GameWindow::playNextSong);
         }
     }
+}
+void GameWindow::on_SkipButton_clicked()
+{
+    playNextSong();
 }

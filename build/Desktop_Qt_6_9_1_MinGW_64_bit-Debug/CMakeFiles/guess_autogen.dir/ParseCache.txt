@@ -174,9 +174,8 @@ D:/qt/guess/gamewindow.h
  mdp:C:/Qt/6.9.1/mingw_64/include/QtMultimedia/qtmultimediaexports.h
  mdp:C:/Qt/6.9.1/mingw_64/include/QtMultimedia/qtmultimediaglobal.h
  mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/QCompleter
- mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/QDialog
+ mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/QWidget
  mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/qcompleter.h
- mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/qdialog.h
  mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/qsizepolicy.h
  mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/qtwidgets-config.h
  mdp:C:/Qt/6.9.1/mingw_64/include/QtWidgets/qtwidgetsexports.h
