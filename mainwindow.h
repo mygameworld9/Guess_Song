@@ -20,7 +20,9 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_directoryModeComboBox_currentIndexChanged(int index);
+    // void on_directoryModeComboBox_currentIndexChanged(int index);
+    void on_selectAllButton_clicked();
+    void on_deselectAllButton_clicked();
     void on_startButton_clicked();
 
 private:

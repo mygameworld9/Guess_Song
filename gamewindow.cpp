@@ -34,7 +34,7 @@ GameWindow::GameWindow(QWidget *parent) :
     completer->setCaseSensitivity(Qt::CaseInsensitive); // 设置不区分大小写
     completer->setFilterMode(Qt::MatchContains);
 
-    connect(ui->giveUpButton, &QPushButton::clicked, this, &GameWindow::on_giveUpButton_clicked);
+    // connect(ui->giveUpButton, &QPushButton::clicked, this, &GameWindow::on_giveUpButton_clicked);
     ui->answerLineEdit->setCompleter(completer);       // 将补全应用到输入框
     ui->countdownProgressBar->setVisible(false);
     ui->countdownProgressBar->setRange(0, 100);
@@ -59,57 +59,104 @@ GameWindow::~GameWindow()
     delete ui;
 }
 
-void GameWindow::setGameSettings(const QString &path, int difficulty)
+// void GameWindow::setGameSettings(const QString &path, int difficulty)
+// {
+//     // 将传递过来的数据存储到成员变量中
+//     this->musicDirectory = path;
+//     this->gameDifficulty = difficulty;
+
+
+//     QString difficultyText = (difficulty == 0) ? "整首歌" : QString("%1秒").arg(difficulty);
+//     this->setWindowTitle(QString("游戏进行中 - %1").arg(difficultyText));
+
+//     qDebug() << "游戏窗口已加载设置:";
+//     qDebug() << "歌曲目录:" << this->musicDirectory;
+//     qDebug() << "游戏难度:" << difficultyText;
+
+//     loadMusicFiles();
+// }
+void GameWindow::setGameSettings(const QStringList &musicFiles, float difficulty)
 {
-    // 将传递过来的数据存储到成员变量中
-    this->musicDirectory = path;
+    // 1. 将传递过来的“文件列表”和“难度”存储到成员变量中
+    this->playlist = musicFiles; // 直接存储最终的文件列表
     this->gameDifficulty = difficulty;
 
-
+    // 2. 更新窗口标题 (这部分逻辑不变)
     QString difficultyText = (difficulty == 0) ? "整首歌" : QString("%1秒").arg(difficulty);
     this->setWindowTitle(QString("游戏进行中 - %1").arg(difficultyText));
 
+    // 3. 打印日志，确认接收到的信息
     qDebug() << "游戏窗口已加载设置:";
-    qDebug() << "歌曲目录:" << this->musicDirectory;
+    qDebug() << "接收到的歌曲数量:" << this->playlist.count(); // 打印文件的数量更有意义
     qDebug() << "游戏难度:" << difficultyText;
+    // qDebug() << "歌曲列表:" << this->playlist;
 
+    // 4. 调用 loadMusicFiles() 来准备播放
+    // 现在的 loadMusicFiles() 不再是去“加载”，而是去“准备播放列表”，比如随机排序等
     loadMusicFiles();
 }
+// void GameWindow::loadMusicFiles()
+// {
+//     musicFiles.clear();
+//     songTitles.clear();
+
+//     QDirIterator it(musicDirectory, {"*.mp3", "*.flac", "*.wav", "*.m4a"}, QDir::Files, QDirIterator::Subdirectories);
+
+//     while (it.hasNext()) {
+//         QString filePath = it.next();
+//         musicFiles.append(filePath);
+
+//         QFileInfo fileInfo(filePath);
+//         QString fileName = fileInfo.baseName(); // 获取不带后缀的文件名
+
+//         QString artist, title;
+//         parseSongName(fileName, artist, title); // 解析歌名
+
+//         // 如果有歌手，答案就是 "歌手 - 歌名"
+//         // 英文歌名统一转为小写以忽略大小写
+//         // QString answer = title.toLower();
+//         songTitles.append(title);
+//         // songTitles.append(answer); // 将处理后的歌名存入列表
+//     }
+//     for(const QString& title : songTitles) {
+//         songTrie.insert(title.toLower()); // 插入小写版本用于匹配
+//     }
+//     completerModel->setStringList(songTitles);
+//     // if (musicFiles.isEmpty()) {
+//     // QMessageBox::warning(this, "错误", "所选目录中未找到任何支持的音乐文件！\n请检查目录或更换目录。");
+//     // ui->playButton->setEnabled(false); // 禁用播放按钮
+//     // } else {
+//     qDebug() << "成功加载" << musicFiles.count() << "首歌曲。";
+//     // }
+//     generateShuffledPlaylist(); //开始生成播放列表
+
+// }
 void GameWindow::loadMusicFiles()
 {
-    musicFiles.clear();
-    songTitles.clear();
 
-    QDirIterator it(musicDirectory, {"*.mp3", "*.flac", "*.wav", "*.m4a"}, QDir::Files, QDirIterator::Subdirectories);
-
-    while (it.hasNext()) {
-        QString filePath = it.next();
-        musicFiles.append(filePath);
-
+    if (playlist.isEmpty()) {
+        qDebug() << "错误：播放列表为空，无法加载音乐。";
+        // 在这里可以显示一个错误消息给用户，然后关闭窗口
+        QMessageBox::critical(this, "错误", "没有可播放的音乐文件！");
+        this->close(); // 关闭游戏窗口
+        return;
+    }
+    for (int i = 0; i < playlist.size(); ++i) {
+        shuffledPlaylist.append(i);
+    }
+    for (const QString& filePath : playlist) {
+        // --- 从这里开始，是你写的正确逻辑 ---
         QFileInfo fileInfo(filePath);
         QString fileName = fileInfo.baseName(); // 获取不带后缀的文件名
 
         QString artist, title;
         parseSongName(fileName, artist, title); // 解析歌名
 
-        // 如果有歌手，答案就是 "歌手 - 歌名"
-        // 英文歌名统一转为小写以忽略大小写
-        // QString answer = title.toLower();
         songTitles.append(title);
-        // songTitles.append(answer); // 将处理后的歌名存入列表
-    }
-    for(const QString& title : songTitles) {
-        songTrie.insert(title.toLower()); // 插入小写版本用于匹配
+        // --- 到这里结束 ---
     }
     completerModel->setStringList(songTitles);
-    // if (musicFiles.isEmpty()) {
-    // QMessageBox::warning(this, "错误", "所选目录中未找到任何支持的音乐文件！\n请检查目录或更换目录。");
-    // ui->playButton->setEnabled(false); // 禁用播放按钮
-    // } else {
-    qDebug() << "成功加载" << musicFiles.count() << "首歌曲。";
-    // }
-    generateShuffledPlaylist(); //开始生成播放列表
-
+    generateShuffledPlaylist();
 }
 void GameWindow::parseSongName(const QString& fileName, QString& artist, QString& title)
 {
@@ -130,7 +177,7 @@ void GameWindow::on_playButton_clicked()
     if (player->playbackState() == QMediaPlayer::PlayingState || currentSongIndex != -1) {
         player->stop(); // 先停止
         if(gameDifficulty > 0){
-            player->setSource(QUrl::fromLocalFile(musicFiles[currentSongIndex]));
+            player->setSource(QUrl::fromLocalFile(playlist[currentSongIndex]));
             player->setPosition(randomStartTime + 10);
         }
         else{
@@ -144,7 +191,7 @@ void GameWindow::on_playButton_clicked()
         // 它会在指定毫秒数后执行一个 lambda 函数
         QTimer::singleShot( gameDifficulty * 1000, this, [this]() {
             // 再次检查，确保是在操作同一首歌时才停止
-            if(player->source() == QUrl::fromLocalFile(musicFiles[currentSongIndex])) {
+            if(player->source() == QUrl::fromLocalFile(playlist[currentSongIndex])) {
                 player->stop();
                 qDebug() << "片段播放停止。";
             }
@@ -164,14 +211,17 @@ void GameWindow::playNextSong()
     setInputControlsEnabled(true);
     countdownTimer->stop(); // 先停止上一次的计时器
     m_currentSongDuration = 0;
-    if (musicFiles.isEmpty()) return;
-    if (playlistPosition >= shuffledPlaylist.size()) {
+
+    if (playlist.isEmpty()) return;
+    if (playlistPosition >= playlist.size()) {
+        player->stop();
         QMessageBox::information(this, "提示", "所有歌曲均已播放完毕！\n即将开始新一轮随机播放。");
         // 重新生成一个新的、完全不同的随机播放列表
         generateShuffledPlaylist();
     }
-    // 随机选择一首歌
+
     currentSongIndex = shuffledPlaylist[playlistPosition];
+    // 随机选择一首歌
     currentCorrectAnswer = songTitles[currentSongIndex];
     // QFileInfo fileInfo(musicFiles[currentSongIndex]);
     // QString fileName = fileInfo.baseName();
@@ -190,10 +240,10 @@ void GameWindow::playNextSong()
     } else {
         ui->countdownProgressBar->setVisible(false); // “整首歌”难度则隐藏
     }
-    qDebug() << "当前播放: " << musicFiles[currentSongIndex];
+    qDebug() << "当前播放: " << songTitles[currentSongIndex];
     qDebug() << "正确答案是: " << currentCorrectAnswer;
     player->stop();
-    player->setSource(QUrl::fromLocalFile(musicFiles[currentSongIndex]));
+    player->setSource(QUrl::fromLocalFile(playlist[currentSongIndex]));
     player->play();
     const int clipDurationMs = gameDifficulty * 1000;
 
@@ -232,7 +282,7 @@ void GameWindow::playNextSong()
             // 设置一个定时器，在播放了 clipDurationMs 毫秒后停止播放
             QTimer::singleShot(clipDurationMs, this, [this]() {
                 // 再次检查，确保是在操作同一首歌时才停止
-                if(player->source() == QUrl::fromLocalFile(musicFiles[currentSongIndex])) {
+                if(player->source() == QUrl::fromLocalFile(playlist[currentSongIndex])) {
                     player->stop();
                     qDebug() << "片段播放停止。";
                 }
@@ -246,7 +296,7 @@ void GameWindow::playNextSong()
         // 使用 QTimer::singleShot 可以创建一个只触发一次的定时器
         // 它会在指定毫秒数后执行一个 lambda 函数
         QTimer::singleShot(gameDifficulty * 1000, this, [this]() {
-            if (player->source() == QUrl::fromLocalFile(musicFiles[currentSongIndex])) {
+            if (player->source() == QUrl::fromLocalFile(playlist[currentSongIndex])) {
                 player->stop();
                 qDebug() << "播放停止（" << gameDifficulty << "秒）。";
             }
@@ -337,7 +387,7 @@ void GameWindow::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     // 检查是否是第一次显示窗口，并且音乐文件已成功加载
-    if (isFirstShow && !musicFiles.isEmpty()) {
+    if (isFirstShow && !playlist.isEmpty()) {
         isFirstShow = false;
 
         QTimer::singleShot(0, this, &GameWindow::playNextSong);
@@ -349,19 +399,15 @@ void GameWindow::generateShuffledPlaylist()
     qDebug() << "生成新的随机播放列表...";
 
     // 1. 清空旧的播放列表
-    shuffledPlaylist.clear();
 
     // 2. 创建一个临时的、从 0 到 n-1 的顺序索引列表
-    for (int i = 0; i < musicFiles.size(); ++i) {
-        shuffledPlaylist.append(i);
-        qDebug() << i << " ";
-    }
 
     // 3. 使用C++标准库的算法来彻底打乱这个索引列表
     // std::random_shuffle(shuffledPlaylist.begin(), shuffledPlaylist.end());//c17被弃用
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(shuffledPlaylist.begin(), shuffledPlaylist.end(), g);
+
     // 4. 将播放位置重置为0，从新列表的开头开始
     playlistPosition = 0;
 

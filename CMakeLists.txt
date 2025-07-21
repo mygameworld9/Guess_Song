@@ -45,14 +45,10 @@ else()
         add_executable(guess
             ${PROJECT_SOURCES}
         )
-    target_compile_options(my_awesome_game PRIVATE
-        -finput-charset=UTF-8
-        -fexec-charset=UTF-8
-    )
+    target_compile_options(guess PRIVATE -finput-charset=UTF-8 -fexec-charset=UTF-8)
     endif()
 endif()
 
-target_link_libraries(guess PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
@@ -87,4 +83,4 @@ add_custom_command(
 )
 target_link_libraries(guess PRIVATE Qt6::Widgets Qt6::Multimedia)
 add_definitions(-DQT_USE_UTF8_CONVERSION)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexec-charset=UTF-8")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexec-charset=UTF-8")

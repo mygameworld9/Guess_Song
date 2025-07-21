@@ -25,7 +25,8 @@ class GameWindow : public QWidget
 public:
     explicit GameWindow(QWidget *parent = nullptr);
     ~GameWindow();
-    void setGameSettings(const QString &path, int difficulty);
+    // void setGameSettings(const QString &path, int difficulty);
+    void setGameSettings(const QStringList &musicFiles, float difficulty);
 protected:
     void showEvent(QShowEvent *event) override; // 覆盖 QWidget 的 showEvent
 private slots:
@@ -66,6 +67,7 @@ void generateShuffledPlaylist();
     QStringList musicFiles;
     QStringList songTitles;
     QString currentCorrectAnswer;
+    QStringList playlist;
     int currentSongIndex = -1;
     bool isFirstShow = true;
     Trie songTrie;
