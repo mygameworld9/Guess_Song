@@ -39,8 +39,9 @@ template <> constexpr inline auto GameWindow::qt_create_metaobjectdata<qt_meta_t
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "GameWindow",
-        "on_SkipButton_clicked",
+        "on_StopButton_clicked",
         "",
+        "on_SkipButton_clicked",
         "on_playButton_clicked",
         "on_answerLineEdit_textChanged",
         "text",
@@ -56,31 +57,33 @@ template <> constexpr inline auto GameWindow::qt_create_metaobjectdata<qt_meta_t
     };
 
     QtMocHelpers::UintData qt_methods {
-        // Slot 'on_SkipButton_clicked'
+        // Slot 'on_StopButton_clicked'
         QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'on_playButton_clicked'
+        // Slot 'on_SkipButton_clicked'
         QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'on_playButton_clicked'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'on_answerLineEdit_textChanged'
-        QtMocHelpers::SlotData<void(const QString &)>(4, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::QString, 5 },
+        QtMocHelpers::SlotData<void(const QString &)>(5, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QString, 6 },
         }}),
         // Slot 'on_answerLineEdit_returnPressed'
-        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'on_changeFolderButton_clicked'
         QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'on_changeDifficultyButton_clicked'
+        // Slot 'on_changeFolderButton_clicked'
         QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'on_submitAnswerButton_clicked'
+        // Slot 'on_changeDifficultyButton_clicked'
         QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'on_giveUpButton_clicked'
+        // Slot 'on_submitAnswerButton_clicked'
         QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'updateCountdown'
+        // Slot 'on_giveUpButton_clicked'
         QtMocHelpers::SlotData<void()>(11, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'handleTimeUp'
+        // Slot 'updateCountdown'
         QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'handleTimeUp'
+        QtMocHelpers::SlotData<void()>(13, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onDurationChanged'
-        QtMocHelpers::SlotData<void(qint64)>(13, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::LongLong, 14 },
+        QtMocHelpers::SlotData<void(qint64)>(14, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::LongLong, 15 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -105,17 +108,18 @@ void GameWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     auto *_t = static_cast<GameWindow *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->on_SkipButton_clicked(); break;
-        case 1: _t->on_playButton_clicked(); break;
-        case 2: _t->on_answerLineEdit_textChanged((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 3: _t->on_answerLineEdit_returnPressed(); break;
-        case 4: _t->on_changeFolderButton_clicked(); break;
-        case 5: _t->on_changeDifficultyButton_clicked(); break;
-        case 6: _t->on_submitAnswerButton_clicked(); break;
-        case 7: _t->on_giveUpButton_clicked(); break;
-        case 8: _t->updateCountdown(); break;
-        case 9: _t->handleTimeUp(); break;
-        case 10: _t->onDurationChanged((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
+        case 0: _t->on_StopButton_clicked(); break;
+        case 1: _t->on_SkipButton_clicked(); break;
+        case 2: _t->on_playButton_clicked(); break;
+        case 3: _t->on_answerLineEdit_textChanged((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 4: _t->on_answerLineEdit_returnPressed(); break;
+        case 5: _t->on_changeFolderButton_clicked(); break;
+        case 6: _t->on_changeDifficultyButton_clicked(); break;
+        case 7: _t->on_submitAnswerButton_clicked(); break;
+        case 8: _t->on_giveUpButton_clicked(); break;
+        case 9: _t->updateCountdown(); break;
+        case 10: _t->handleTimeUp(); break;
+        case 11: _t->onDurationChanged((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
         default: ;
         }
     }
@@ -140,14 +144,14 @@ int GameWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 12;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 11)
+        if (_id < 12)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 11;
+        _id -= 12;
     }
     return _id;
 }

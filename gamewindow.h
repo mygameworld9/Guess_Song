@@ -30,6 +30,7 @@ public:
 protected:
     void showEvent(QShowEvent *event) override; // 覆盖 QWidget 的 showEvent
 private slots:
+    void on_StopButton_clicked();
     void on_SkipButton_clicked();
     void on_playButton_clicked();
     void on_answerLineEdit_textChanged(const QString &text);

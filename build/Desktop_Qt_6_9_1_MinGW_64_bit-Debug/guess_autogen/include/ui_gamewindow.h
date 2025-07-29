@@ -38,6 +38,7 @@ public:
     QProgressBar *countdownProgressBar;
     QLabel *scoreLabel;
     QPushButton *SkipButton;
+    QPushButton *StopButton;
 
     void setupUi(QWidget *gamewindow)
     {
@@ -54,17 +55,17 @@ public:
         actionSkip->setShortcutVisibleInContextMenu(true);
         statusLabel = new QLabel(gamewindow);
         statusLabel->setObjectName("statusLabel");
-        statusLabel->setGeometry(QRect(70, 120, 261, 16));
+        statusLabel->setGeometry(QRect(60, 100, 261, 16));
         playButton = new QPushButton(gamewindow);
         playButton->setObjectName("playButton");
-        playButton->setGeometry(QRect(110, 70, 101, 23));
+        playButton->setGeometry(QRect(100, 60, 101, 23));
         playButton->setIconSize(QSize(48, 48));
         answerLineEdit = new QLineEdit(gamewindow);
         answerLineEdit->setObjectName("answerLineEdit");
-        answerLineEdit->setGeometry(QRect(90, 150, 113, 21));
+        answerLineEdit->setGeometry(QRect(60, 130, 113, 21));
         horizontalLayoutWidget = new QWidget(gamewindow);
         horizontalLayoutWidget->setObjectName("horizontalLayoutWidget");
-        horizontalLayoutWidget->setGeometry(QRect(90, 210, 160, 80));
+        horizontalLayoutWidget->setGeometry(QRect(80, 190, 160, 80));
         horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
         horizontalLayout->setObjectName("horizontalLayout");
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -80,24 +81,27 @@ public:
 
         submitAnswerButton = new QPushButton(gamewindow);
         submitAnswerButton->setObjectName("submitAnswerButton");
-        submitAnswerButton->setGeometry(QRect(220, 150, 75, 23));
+        submitAnswerButton->setGeometry(QRect(190, 130, 75, 23));
         giveUpButton = new QPushButton(gamewindow);
         giveUpButton->setObjectName("giveUpButton");
-        giveUpButton->setGeometry(QRect(310, 150, 75, 23));
+        giveUpButton->setGeometry(QRect(280, 130, 75, 23));
         correctAnswerLabel = new QLabel(gamewindow);
         correctAnswerLabel->setObjectName("correctAnswerLabel");
-        correctAnswerLabel->setGeometry(QRect(230, 120, 53, 15));
+        correctAnswerLabel->setGeometry(QRect(90, 100, 221, 16));
         countdownProgressBar = new QProgressBar(gamewindow);
         countdownProgressBar->setObjectName("countdownProgressBar");
-        countdownProgressBar->setGeometry(QRect(90, 180, 291, 23));
+        countdownProgressBar->setGeometry(QRect(60, 160, 291, 23));
         countdownProgressBar->setValue(24);
         scoreLabel = new QLabel(gamewindow);
         scoreLabel->setObjectName("scoreLabel");
         scoreLabel->setGeometry(QRect(290, 10, 53, 15));
         SkipButton = new QPushButton(gamewindow);
         SkipButton->setObjectName("SkipButton");
-        SkipButton->setGeometry(QRect(220, 120, 75, 23));
+        SkipButton->setGeometry(QRect(220, 60, 75, 23));
         SkipButton->setCheckable(false);
+        StopButton = new QPushButton(gamewindow);
+        StopButton->setObjectName("StopButton");
+        StopButton->setGeometry(QRect(250, 220, 75, 23));
 
         retranslateUi(gamewindow);
 
@@ -127,6 +131,7 @@ public:
         correctAnswerLabel->setText(QString());
         scoreLabel->setText(QCoreApplication::translate("gamewindow", "\345\275\223\345\211\215\346\210\220\347\273\251\357\274\232", nullptr));
         SkipButton->setText(QCoreApplication::translate("gamewindow", "\350\267\263\350\277\207", nullptr));
+        StopButton->setText(QCoreApplication::translate("gamewindow", "\346\232\202\345\201\234", nullptr));
     } // retranslateUi
 
 };

@@ -171,6 +171,15 @@ void GameWindow::parseSongName(const QString& fileName, QString& artist, QString
         title = cleanedName;
     }
 }
+void GameWindow::on_StopButton_clicked()
+{
+    if (player->playbackState() == QMediaPlayer::PlayingState) {
+        player->stop(); // 先停止
+    }
+    else{
+        player->play();
+    }
+}
 void GameWindow::on_playButton_clicked()
 {
     // 如果当前有歌曲正在播放（意味着用户想重复听），则重新播放

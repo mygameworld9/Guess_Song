@@ -61,7 +61,7 @@
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>80</x>
      <y>190</y>
      <width>160</width>
      <height>80</height>
@@ -166,6 +166,19 @@
    </property>
    <property name="checkable">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="StopButton">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>220</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>暂停</string>
    </property>
   </widget>
   <action name="actionSkip">

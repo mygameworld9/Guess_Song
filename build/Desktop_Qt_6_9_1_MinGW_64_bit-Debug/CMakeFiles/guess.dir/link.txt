@@ -1,0 +1,3 @@
+C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f CMakeFiles\guess.dir/objects.a
+C:\Qt\Tools\mingw1310_64\bin\ar.exe qc CMakeFiles\guess.dir/objects.a @CMakeFiles\guess.dir\objects1.rsp
+C:\Qt\Tools\mingw1310_64\bin\g++.exe -DQT_QML_DEBUG -g -mwindows -Wl,--whole-archive CMakeFiles\guess.dir/objects.a -Wl,--no-whole-archive -o guess.exe -Wl,--out-implib,libguess.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\guess.dir\linkLibs.rsp
